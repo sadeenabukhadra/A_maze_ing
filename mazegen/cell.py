@@ -5,6 +5,7 @@ class Cell:
     Each cell stores its position, visitation state, and the status
     of its four surrounding walls (north, east, south, and west).
     """
+
     def __init__(self, x: int, y: int) -> None:
         """
         Initialize a new cell.

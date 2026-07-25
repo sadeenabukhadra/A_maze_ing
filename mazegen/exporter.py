@@ -1,0 +1,6 @@
+class MazeExporter:
+    def encode_hixca():
+        ...
+
+    def write_file():
+        ...

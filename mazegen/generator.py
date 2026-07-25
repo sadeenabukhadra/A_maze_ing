@@ -6,19 +6,19 @@ from collections.abc import Callable
 
 class MazeGenenrator(ABC):
     def __init__(
-            self, WIDTH: int, HEIGHT: int,
-            ENTRY: tuple[int, int], Exit: tuple[int, int],
-            SEED: int
-            ) -> None:
-        ...
+        self,
+        WIDTH: int,
+        HEIGHT: int,
+        ENTRY: tuple[int, int],
+        Exit: tuple[int, int],
+        SEED: int,
+    ) -> None: ...
 
     @abstractmethod
-    def create_grid(self) -> None:
-        ...
+    def create_grid(self) -> None: ...
 
     @abstractmethod
-    def genrator_maze(self) -> None:
-        ...
+    def genrator_maze(self) -> None: ...
 
 
 class PerfctMaze(MazeGenenrator):
@@ -36,13 +36,11 @@ class NonePerfectMaze(MazeGenenrator):
     def genrator_maze(self):
         return super().genrator_maze()
 
-    def add_loop():
-        ...
+    def add_loop(): ...
 
 
-def get_maze(maze: Callable):
-    ...
+def get_maze(maze: Callable): ...
+
 
 if __name__ == "__main__":
     ...
-

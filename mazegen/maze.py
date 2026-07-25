@@ -1,6 +1,7 @@
 from .cell import Cell
 
-# to know thr neighbors
+
+# to know the neighbors
 class Maze:
     def __init__(self, rows: int, cols: int) -> None:
         self.rows: int = rows
@@ -10,12 +11,10 @@ class Maze:
 
         self.create_cells()
 
-
     def create_cells(self) -> None:
         for y in range(self.rows):
             for x in range(self.cols):
                 self.cells[(x, y)] = Cell(x, y)
-
 
     def get_cell(self, position: tuple[int, int]) -> Cell:
         return self.cells[position]
