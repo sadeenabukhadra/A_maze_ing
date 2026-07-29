@@ -1,6 +1,6 @@
 from collections import deque
 from typing import Deque
-
+from generator import Generator
 
 class MazeSolver:
     """
@@ -30,7 +30,7 @@ class MazeSolver:
         self.parent: dict[tuple[int, int], tuple[int, int]] = {}
 
 
-    def solve(self, maze: "Maze") -> list[tuple[int, int]] | None:
+    def solve(self, maze: Generator) -> list[tuple[int, int]] | None:
         """
         Find a path from start to end using BFS.
 
