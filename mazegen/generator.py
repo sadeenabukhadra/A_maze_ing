@@ -246,7 +246,8 @@ class Generator:
 def add_loop(generator: Generator) -> None:
     """Add random loops to the generated maze."""
     attempts = (generator.width * generator.height) // 10
-
+    if attempts == 0:
+        attempts += 1
     for _ in range(attempts):
         x = random.randint(0, generator.width - 1)
         y = random.randint(0, generator.height - 1)
@@ -274,7 +275,10 @@ def perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    generator.reserve_42_cells()
+    if (generator.height >= 7 or generator.width >= 11):
+        generator.reserve_42_cells()
+    else:
+        print("The maze is very small")
     generator.choose_entry()
     generator.choose_exit()
     generator.run_backtracking()
@@ -287,7 +291,10 @@ def none_perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    generator.reserve_42_cells()
+    if (generator.height >= 7 or generator.width >= 11):
+        generator.reserve_42_cells()
+    else:
+        print("The maze is very small")
     generator.choose_entry()
     generator.choose_exit()
     generator.run_backtracking()
