@@ -2,6 +2,7 @@ from collections import deque
 from typing import Deque
 from generator import Generator
 
+
 class MazeSolver:
     """
     Solves a maze using the Breadth-First Search (BFS) algorithm.
@@ -29,7 +30,6 @@ class MazeSolver:
         # Stores where each cell came from
         self.parent: dict[tuple[int, int], tuple[int, int]] = {}
 
-
     def solve(self, maze: Generator) -> list[tuple[int, int]] | None:
         """
         Find a path from start to end using BFS.
@@ -41,24 +41,19 @@ class MazeSolver:
             The shortest path as a list of coordinates,
             or None if no path exists.
         """
-
         self.queue.append(self.start)
         self.visited.add(self.start)
-
 
         while self.queue:
 
             current: tuple[int, int] = self.queue.popleft()
 
-
             # Goal reached
             if current == self.end:
                 return self.reconstruct_path()
 
-
             # Ask Maze for possible moves
             neighbors: list[tuple[int, int]] = maze.get_neighbors(current)
-
 
             for neighbor in neighbors:
 
@@ -67,17 +62,13 @@ class MazeSolver:
                     # Mark as discovered
                     self.visited.add(neighbor)
 
-
                     # Remember the previous cell
                     self.parent[neighbor] = current
-
 
                     # Add to BFS queue
                     self.queue.append(neighbor)
 
-
         return None
-
 
     def reconstruct_path(self) -> list[tuple[int, int]]:
         """
@@ -91,20 +82,16 @@ class MazeSolver:
 
         current: tuple[int, int] = self.end
 
-
         while current != self.start:
 
             path.append(current)
 
             current = self.parent[current]
 
-
         # Add starting point
         path.append(self.start)
 
-
         # Reverse because we built it backwards
         path.reverse()
-
 
         return path
