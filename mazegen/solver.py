@@ -106,3 +106,4 @@ class MazeSolver:
         path.reverse()
 
         return path
+
