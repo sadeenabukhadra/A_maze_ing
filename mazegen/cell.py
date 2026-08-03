@@ -1,3 +1,10 @@
+"""
+Cell module.
+
+This module contains the Cell class that represents a single maze cell.
+"""
+
+
 class Cell:
     """
     Represents a single cell in the maze.
@@ -17,6 +24,9 @@ class Cell:
         self.x: int = x
         self.y: int = y
         self.visited: bool = False
+
+        # True means the wall is closed
+        # False means the wall is open
         self.north: bool = True
         self.east: bool = True
         self.west: bool = True
@@ -50,14 +60,19 @@ class Cell:
         Raises:
             ValueError: If the direction is invalid.
         """
+
         if direction == "north":
             return self.north
+
         elif direction == "south":
             return self.south
+
         elif direction == "west":
             return self.west
+
         elif direction == "east":
             return self.east
+
         else:
             raise ValueError(f"Invalid direction: {direction}")
 
@@ -71,13 +86,18 @@ class Cell:
         Raises:
             ValueError: If the direction is invalid.
         """
+
         if direction == "north":
             self.north = False
+
         elif direction == "south":
             self.south = False
+
         elif direction == "west":
             self.west = False
+
         elif direction == "east":
             self.east = False
+
         else:
             raise ValueError(f"Invalid direction: {direction}")

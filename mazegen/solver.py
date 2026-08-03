@@ -1,6 +1,8 @@
 from collections import deque
 from typing import Deque
-from .maze
+from .cell import Cell
+from .generator import Generator
+
 
 class MazeSolver:
     """
@@ -19,6 +21,7 @@ class MazeSolver:
             start: Starting cell coordinates.
             end: Target cell coordinates.
         """
+
         self.start: tuple[int, int] = start
         self.end: tuple[int, int] = end
 
@@ -26,71 +29,71 @@ class MazeSolver:
 
         self.visited: set[tuple[int, int]] = set()
 
-        # Stores where each cell came from
-        self.parent: dict[tuple[int, int], tuple[int, int]] = {}
+        self.parent: dict[
+            tuple[int, int],
+            tuple[int, int]
+        ] = {}
 
-
-    def solve(self, maze: "Maze") -> list[tuple[int, int]] | None:
+    def solve(
+        self,
+        maze: Generator
+    ) -> list[tuple[int, int]] | None:
         """
         Find a path from start to end using BFS.
 
         Args:
-            maze: Maze object that provides accessible neighbors.
+            maze: Generated maze.
 
         Returns:
-            The shortest path as a list of coordinates,
-            or None if no path exists.
+            Shortest path as coordinates or None.
         """
 
         self.queue.append(self.start)
         self.visited.add(self.start)
 
-
         while self.queue:
 
             current: tuple[int, int] = self.queue.popleft()
 
-
-            # Goal reached
             if current == self.end:
                 return self.reconstruct_path()
 
+            x, y = current
 
-            # Ask Maze for possible moves
-            neighbors: list[tuple[int, int]] = maze.get_neighbors(current)
+            current_cell: Cell = maze.grid[y][x]
 
+            neighbors: list[Cell] = (
+                maze.get_valid_neighbors(current_cell)
+            )
 
             for neighbor in neighbors:
 
-                if neighbor not in self.visited:
+                position: tuple[int, int] = (
+                    neighbor.x,
+                    neighbor.y
+                )
 
-                    # Mark as discovered
-                    self.visited.add(neighbor)
+                if position not in self.visited:
 
+                    self.visited.add(position)
 
-                    # Remember the previous cell
-                    self.parent[neighbor] = current
+                    self.parent[position] = current
 
-
-                    # Add to BFS queue
-                    self.queue.append(neighbor)
-
+                    self.queue.append(position)
 
         return None
-
 
     def reconstruct_path(self) -> list[tuple[int, int]]:
         """
         Rebuild the path after reaching the end.
 
         Returns:
-            List of coordinates from start to end.
+            Path from start to end.
         """
 
         path: list[tuple[int, int]] = []
 
         current: tuple[int, int] = self.end
-
 
         while current != self.start:
 
@@ -98,13 +101,8 @@ class MazeSolver:
 
             current = self.parent[current]
 
-
-        # Add starting point
         path.append(self.start)
 
-
-        # Reverse because we built it backwards
         path.reverse()
-
 
         return path
