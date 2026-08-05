@@ -7,6 +7,7 @@ The digit encodes the closed walls:
     Bit 1 -> East
     Bit 2 -> South
     Bit 3 -> West
+
 """
 
 from .cell import Cell
