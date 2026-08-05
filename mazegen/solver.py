@@ -34,10 +34,49 @@ class MazeSolver:
             tuple[int, int]
         ] = {}
 
+<<<<<<< HEAD
     def solve(
         self,
         maze: Generator
     ) -> list[tuple[int, int]] | None:
+=======
+    def get_open_neighbors(self,
+                           current: tuple[int, int],
+                           maze: Generator
+                           ) -> list[tuple[int, int]]:
+        """
+        Return neighboring coordinates reachable through an open wall.
+ 
+        This does not rely on any Generator-specific method beyond its
+        public attributes (grid, width, height) and Cell.status_wall,
+        so it works with Generator exactly as it is, without any
+        modification to generator.py.
+        """
+        x, y = current
+        curr_cell = maze.grid[y][x]
+
+        directions = [
+            (0, -1, "north"),
+            (0, 1, "south"),
+            (-1, 0, "west"),
+            (1, 0, "east")
+        ]
+
+        open_neigh = []
+
+        for dx, dy, direction in directions:
+            nx, ny = x + dx, y + dy
+
+            if not(0 <= nx < maze.width and 0 <= ny < maze.height):
+                continue
+
+            if not curr_cell.status_wall(direction):
+                open_neigh.append((nx, ny))
+
+        return open_neigh
+
+    def solve(self, maze: Generator) -> list[tuple[int, int]] | None:
+>>>>>>> origin/main
         """
         Find a path from start to end using BFS.
 
@@ -58,12 +97,18 @@ class MazeSolver:
             if current == self.end:
                 return self.reconstruct_path()
 
+<<<<<<< HEAD
             x, y = current
 
             current_cell: Cell = maze.grid[y][x]
 
             neighbors: list[Cell] = (
                 maze.get_valid_neighbors(current_cell)
+=======
+            # Ask Maze for possible moves
+            neighbors: list[tuple[int, int]] = maze.get_open_neighbors(
+                current, maze
+>>>>>>> origin/main
             )
 
             for neighbor in neighbors:
