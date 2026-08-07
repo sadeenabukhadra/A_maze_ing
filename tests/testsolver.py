@@ -16,10 +16,7 @@ class FakeMaze:
             (0, 1): [(0, 0), (0, 2)],
         }
 
-    def get_neighbors(
-        self,
-        current: tuple[int, int]
-    ) -> list[tuple[int, int]]:
+    def get_neighbors(self, current: tuple[int, int]) -> list[tuple[int, int]]:
         return self.graph.get(current, [])
 
 

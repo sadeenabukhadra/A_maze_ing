@@ -24,7 +24,7 @@ def main() -> None:
 
     print("✓ Grid created correctly\n")
 
-    
+
     visited = 0
 
     for row in grid:
@@ -56,7 +56,7 @@ def main() -> None:
     )
     print()
 
-    
+
     x, y = generator.exit_maze
     exit_cell = grid[y][x]
 
@@ -69,7 +69,7 @@ def main() -> None:
     )
     print()
 
-    
+
     print(f"Reserved cells : {len(generator.reserved_cells)}")
     print()
 
@@ -78,7 +78,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    """
+"""
 
 from generator import Generator, perfect
 
@@ -102,18 +102,16 @@ def test_wall_consistency() -> None:
             if x + 1 < generator.width:
                 east = grid[y][x + 1]
 
-                assert (
-                    cell.status_wall("east")
-                    == east.status_wall("west")
+                assert cell.status_wall("east") == east.status_wall(
+                    "west"
                 ), f"Wall mismatch between ({x},{y}) and ({x+1},{y})"
 
             # South <-> North
             if y + 1 < generator.height:
                 south = grid[y + 1][x]
 
-                assert (
-                    cell.status_wall("south")
-                    == south.status_wall("north")
+                assert cell.status_wall("south") == south.status_wall(
+                    "north"
                 ), f"Wall mismatch between ({x},{y}) and ({x},{y+1})"
 
     print("✓ All walls are consistent")

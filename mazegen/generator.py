@@ -5,6 +5,7 @@ This module provides the Generator class and the functions required
 to build a maze using iterative recursive backtracking and to create
 optional loops for non-perfect mazes.
 """
+
 import random
 from .cell import Cell
 from typing import Optional
@@ -12,11 +13,15 @@ from typing import Optional
 
 class Generator:
     """Generate and manage the maze creation process."""
-    def __init__(self, entry: tuple[int, int],
-                 exit_maze: tuple[int, int],
-                 width: int, height: int,
-                 seed: Optional[int]
-                 ) -> None:
+
+    def __init__(
+        self,
+        entry: tuple[int, int],
+        exit_maze: tuple[int, int],
+        width: int,
+        height: int,
+        seed: Optional[int],
+    ) -> None:
         """Generate and manage the maze creation process."""
         self.entry: tuple[int, int] = entry
         self.exit_maze: tuple[int, int] = exit_maze
@@ -59,20 +64,11 @@ class Generator:
         """Validate and open the maze entry."""
         x, y = self.entry
 
-        if not (
-            0 <= x < self.width and 0 <= y < self.height
-        ):
-            raise ValueError(
-                "Invalid entry coordinates: out of maze bounds."
-            )
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            raise ValueError("Invalid entry coordinates: out of maze bounds.")
 
-        if not (
-            x == 0 or x == self.width - 1
-                or y == 0 or y == self.height - 1
-        ):
-            raise ValueError(
-                "Entry coordinates must be on the edges of the maze."
-            )
+        if not (x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1):
+            raise ValueError("Entry coordinates must be on the edges of the maze.")
 
         entry_cell = self.grid[y][x]
 
@@ -89,20 +85,11 @@ class Generator:
         """Validate and open the maze exit."""
         x, y = self.exit_maze
 
-        if not (
-            0 <= x < self.width and 0 <= y < self.height
-        ):
-            raise ValueError(
-                "Invalid exit coordinates: out of maze bounds."
-            )
+        if not (0 <= x < self.width and 0 <= y < self.height):
+            raise ValueError("Invalid exit coordinates: out of maze bounds.")
 
-        if not (
-            x == 0 or x == self.width - 1
-                or y == 0 or y == self.height - 1
-        ):
-            raise ValueError(
-                "Exit coordinates must be on the edges of the maze."
-                )
+        if not (x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1):
+            raise ValueError("Exit coordinates must be on the edges of the maze.")
 
         exit_cell = self.grid[y][x]
 
@@ -197,7 +184,7 @@ class Generator:
             (x, y - 1, "north"),
             (x, y + 1, "south"),
             (x - 1, y, "west"),
-            (x + 1, y, "east")
+            (x + 1, y, "east"),
         ]
 
         closed_neighbors: list[Cell] = []
@@ -275,7 +262,7 @@ def perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    if (generator.height >= 7 or generator.width >= 11):
+    if generator.height >= 7 or generator.width >= 11:
         generator.reserve_42_cells()
     else:
         print("The maze is very small")
@@ -291,7 +278,7 @@ def none_perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    if (generator.height >= 7 or generator.width >= 11):
+    if generator.height >= 7 or generator.width >= 11:
         generator.reserve_42_cells()
     else:
         print("The maze is very small")
