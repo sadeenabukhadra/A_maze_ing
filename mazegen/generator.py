@@ -6,31 +6,32 @@ to build a maze using iterative recursive backtracking and to create
 optional loops for non-perfect mazes.
 """
 import random
-from cell import Cell
-from typing import Optional
+from .cell import Cell
 
 
 class Generator:
     """Generate and manage the maze creation process."""
-    def __init__(self, entry: tuple[int, int],
-                 exit_maze: tuple[int, int],
-                 width: int, height: int,
-                 seed: Optional[int]
-                 ) -> None:
+    def __init__(
+            self,
+            entry: tuple[int, int],
+            exit_maze: tuple[int, int],
+            width: int, height: int,
+            seed: int | None
+    ) -> None:
         """Generate and manage the maze creation process."""
         self.entry: tuple[int, int] = entry
         self.exit_maze: tuple[int, int] = exit_maze
         self.width: int = width
         self.height: int = height
-        self.seed: Optional[int] = seed
+        self.seed: int | None = seed
         self.grid: list[list[Cell]] = []
         self.reserved_cells: set[tuple[int, int]] = set()
 
     def create_grid(self) -> None:
         """Create a grid of cells with all walls initially closed."""
-        for h in range(0, self.height):
+        for h in range(self.height):
             row = []
-            for w in range(0, self.width):
+            for w in range(self.width):
                 row.append(Cell(w, h))
             self.grid.append(row)
 
@@ -74,8 +75,6 @@ class Generator:
                 "Entry coordinates must be on the edges of the maze."
             )
 
-        entry_cell = self.grid[y][x]
-
     def choose_exit(self) -> None:
         """Validate and open the maze exit."""
         x, y = self.exit_maze
@@ -94,9 +93,6 @@ class Generator:
             raise ValueError(
                 "Exit coordinates must be on the edges of the maze."
                 )
-
-        exit_cell = self.grid[y][x]
-
 
     def get_valid_neighbors(self, cell: Cell) -> list[Cell]:
         """Return all unvisited neighboring cells that can be visited."""

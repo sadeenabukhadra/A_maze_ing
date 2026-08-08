@@ -1,6 +1,5 @@
 from collections import deque
-from typing import Deque
-from generator import Generator
+from .generator import Generator
 
 
 class MazeSolver:
@@ -23,20 +22,21 @@ class MazeSolver:
         self.start: tuple[int, int] = start
         self.end: tuple[int, int] = end
 
-        self.queue: Deque[tuple[int, int]] = deque()
+        self.queue: deque[tuple[int, int]] = deque()
 
         self.visited: set[tuple[int, int]] = set()
 
         # Stores where each cell came from
         self.parent: dict[tuple[int, int], tuple[int, int]] = {}
 
-    def get_open_neighbors(self,
-                           current: tuple[int, int],
-                           maze: Generator
-                           ) -> list[tuple[int, int]]:
+    def get_open_neighbors(
+            self,
+            current: tuple[int, int],
+            maze: Generator
+    ) -> list[tuple[int, int]]:
         """
         Return neighboring coordinates reachable through an open wall.
- 
+
         This does not rely on any Generator-specific method beyond its
         public attributes (grid, width, height) and Cell.status_wall,
         so it works with Generator exactly as it is, without any
@@ -57,7 +57,7 @@ class MazeSolver:
         for dx, dy, direction in directions:
             nx, ny = x + dx, y + dy
 
-            if not(0 <= nx < maze.width and 0 <= ny < maze.height):
+            if not (0 <= nx < maze.width and 0 <= ny < maze.height):
                 continue
 
             if not curr_cell.status_wall(direction):

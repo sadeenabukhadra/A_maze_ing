@@ -3,7 +3,7 @@ Main entry point: generates a maze, solves it, and renders it
 interactively in the terminal using RendererMaze.
 """
 
-from generator import Generator, perfect
+from generator import Generator, perfect, none_perfect
 from solver import MazeSolver
 from renderer import RendererMaze
 
@@ -15,7 +15,9 @@ EXIT_MAZE = (WIDTH - 1, HEIGHT - 1)
 PERFECT = False
 
 
-def build_maze(seed: int | None = None) -> tuple[Generator, list[tuple[int, int]] | None]:
+def build_maze(
+    seed: int | None = None,
+) -> tuple[Generator, list[tuple[int, int]] | None]:
     """Generate a new maze and compute its solution path."""
     gen = Generator(
         entry=ENTRY,
@@ -28,14 +30,12 @@ def build_maze(seed: int | None = None) -> tuple[Generator, list[tuple[int, int]
     if PERFECT:
         perfect(gen)
     else:
-        from generator import none_perfect
         none_perfect(gen)
 
     solver = MazeSolver(ENTRY, EXIT_MAZE)
     solution = solver.solve(gen)
 
     return gen, solution
-
 
 def main() -> None:
     """Run the interactive maze rendering loop."""
