@@ -14,5 +14,5 @@ __all__ = [
     "Generator",
     "MazeSolver",
     "perfect",
-    "none_perfect",
+    "none_perfect"
 ]

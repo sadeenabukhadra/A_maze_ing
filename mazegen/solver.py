@@ -88,7 +88,7 @@ class MazeSolver:
                 return self.reconstruct_path()
 
             # Ask Maze for possible moves
-            neighbors: list[tuple[int, int]] = maze.get_open_neighbors(
+            neighbors: list[tuple[int, int]] = self.get_open_neighbors(
                 current, maze
             )
 

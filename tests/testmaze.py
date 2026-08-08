@@ -1,13 +1,12 @@
-"""
-from generator import Generator, perfect
+"""from generator import Generator, perfect
 
 
 def main() -> None:
     generator = Generator(
         entry=(0, 0),
-        exit_maze=(9, 9),
-        width=10,
-        height=10,
+        exit_maze=(1,2),
+        width=3,
+        height=3,
         seed=42,
     )
 
@@ -78,7 +77,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    """
 
 from generator import Generator, perfect
 
@@ -121,3 +119,77 @@ def test_wall_consistency() -> None:
 
 if __name__ == "__main__":
     test_wall_consistency()
+    """
+
+
+
+"""
+ملف اختبار مؤقت بس - يطبع المتاهة بشكل ASCII واضح بالـ terminal
+S = نقطة الدخول (Entry) | E = نقطة الخروج (Exit)
+هذا مو renderer.py الرسمي، هذا بس أداة فحص بصري سريعة.
+"""
+from cell import Cell
+from generator import Generator, perfect, none_perfect
+
+
+def print_maze(
+    grid: list[list[Cell]],
+    width: int,
+    height: int,
+    entry: tuple[int, int],
+    exit_point: tuple[int, int],
+) -> None:
+    # الصف العلوي بالكامل (جدران شمالية لأول صف)
+    top = "+"
+    for x in range(width):
+        top += "---+" if grid[0][x].status_wall("north") else "   +"
+    print(top)
+
+    for y in range(height):
+        # سطر الخلايا: الجدار الغربي + محتوى الخلية (فاضي أو S/E)
+        row = ""
+        for x in range(width):
+            cell = grid[y][x]
+            left_wall = "|" if cell.status_wall("west") else " "
+
+            if (x, y) == entry:
+                content = " S "
+            elif (x, y) == exit_point:
+                content = " E "
+            else:
+                content = "   "
+
+            row += left_wall + content
+
+        row += "|" if grid[y][width - 1].status_wall("east") else " "
+        print(row)
+
+        # سطر الجدران الجنوبية لهذا الصف
+        bottom = "+"
+        for x in range(width):
+            cell = grid[y][x]
+            bottom += "---+" if cell.status_wall("south") else "   +"
+        print(bottom)
+
+
+if __name__ == "__main__":
+    WIDTH = 3
+    HEIGHT = 3
+    ENTRY = (0, 0)
+    EXIT = (WIDTH - 1, HEIGHT - 1)
+    SEED = 42
+
+    print("=" * 65)
+    print("PERFECT MAZE   (S = Entry, E = Exit)")
+    print("=" * 65)
+    gen1 = Generator(ENTRY, EXIT, WIDTH, HEIGHT, SEED)
+    maze1 = perfect(gen1)
+    print_maze(maze1, WIDTH, HEIGHT, ENTRY, EXIT)
+
+    print()
+    print("=" * 65)
+    print("NONE PERFECT MAZE (Pac-Man style, with loops)")
+    print("=" * 65)
+    gen2 = Generator(ENTRY, EXIT, WIDTH, HEIGHT, SEED)
+    maze2 = none_perfect(gen2)
+    print_maze(maze2, WIDTH, HEIGHT, ENTRY, EXIT)

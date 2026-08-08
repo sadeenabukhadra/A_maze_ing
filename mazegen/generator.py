@@ -37,11 +37,11 @@ class Generator:
     def reserve_42_cells(self) -> None:
         """Reserve the cells used to draw the 42 pattern."""
         pattern: list[list[int]] = [
-            [1, 0, 0, 0, 0, 1, 1, 1, 0],
-            [1, 0, 0, 0, 0, 0, 0, 1, 0],
-            [1, 1, 1, 1, 0, 1, 1, 1, 0],
-            [0, 0, 0, 1, 0, 1, 0, 0, 0],
-            [0, 0, 0, 1, 0, 1, 1, 1, 0],
+            [1, 0, 0, 0, 1, 1, 1, 0],
+            [1, 0, 0, 0, 0, 0, 1, 0],
+            [1, 1, 1, 0, 1, 1, 1, 0],
+            [0, 0, 1, 0, 1, 0, 0, 0],
+            [0, 0, 1, 0, 1, 1, 1, 0],
         ]
         pattern_height: int = len(pattern)
         pattern_width: int = len(pattern[0])
@@ -76,15 +76,6 @@ class Generator:
 
         entry_cell = self.grid[y][x]
 
-        if x == 0:
-            entry_cell.open_wall("west")
-        elif x == self.width - 1:
-            entry_cell.open_wall("east")
-        elif y == 0:
-            entry_cell.open_wall("north")
-        elif y == self.height - 1:
-            entry_cell.open_wall("south")
-
     def choose_exit(self) -> None:
         """Validate and open the maze exit."""
         x, y = self.exit_maze
@@ -106,14 +97,6 @@ class Generator:
 
         exit_cell = self.grid[y][x]
 
-        if x == 0:
-            exit_cell.open_wall("west")
-        elif x == self.width - 1:
-            exit_cell.open_wall("east")
-        elif y == 0:
-            exit_cell.open_wall("north")
-        elif y == self.height - 1:
-            exit_cell.open_wall("south")
 
     def get_valid_neighbors(self, cell: Cell) -> list[Cell]:
         """Return all unvisited neighboring cells that can be visited."""
@@ -275,7 +258,7 @@ def perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    if (generator.height >= 7 or generator.width >= 11):
+    if (generator.height >= 7 or generator.width >= 10):
         generator.reserve_42_cells()
     else:
         print("The maze is very small")
@@ -291,7 +274,7 @@ def none_perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    if (generator.height >= 7 or generator.width >= 11):
+    if (generator.height >= 7 or generator.width >= 10):
         generator.reserve_42_cells()
     else:
         print("The maze is very small")
