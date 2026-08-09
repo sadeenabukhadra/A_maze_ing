@@ -4,3 +4,4 @@ ENTRY = 0,0
 EXIST = 19,14
 OUTPUT_FILE = maze.txt
 PERFECT = True
+SEED = 8
