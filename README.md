@@ -390,10 +390,4 @@ pytest test/
   `mypy`.
 
 ## AI Usage
-
-<Describe specifically what AI was used for and for which parts of the project — e.g.
-"used to review edge cases in the config parser," "used to explain mypy/flake8
-warnings," "used to check docstring clarity." Be specific rather than generic.>
-
-All algorithmic decisions, data structure choices, and the final submitted code were
-understood, reviewed, and validated by both learners before submission.
+- for explaining and understanding Algorithms better
