@@ -143,26 +143,27 @@ Team and project management
 - What worked well / what could be improved: <retrospective notes>
 - Tools used: <e.g. Git/GitHub, project board, CI, specific linters, pair programming sessions, etc.>
 # Project structure
-.
-├── LICENSE.md
-├── Makefile
-├── README.md
-├── a_maze_ing.py
-├── config.txt
-├── mazegen/
-│   ├── __init__.py
-│   ├── cell.py
-│   ├── exporter.py
-│   ├── generator.py
-│   ├── renderer.py
-│   └── solver.py
-├── mazegen-<version>-py3-none-any.whl   # built package (or .tar.gz)
-├── parser.py
-├── pyproject.toml
-├── requirements.txt
-└── test/
-    ├── __init__.py
-    ├── test_cell.py
-    ├── test_generator.py
-    ├── test_renderer.py
-    └── test_solver.py
+
+     .
+     ├── LICENSE.md
+     ├── Makefile
+     ├── README.md
+     ├── a_maze_ing.py
+     ├── config.txt
+     ├── mazegen/
+     │   ├── __init__.py
+     │   ├── cell.py
+     │   ├── exporter.py
+     │   ├── generator.py
+     │   ├── renderer.py
+     │   └── solver.py
+     ├── mazegen-<version>-py3-none-any.whl   # built package (or .tar.gz)
+     ├── parser.py
+     ├── pyproject.toml
+     ├── requirements.txt
+     └── test/
+        ├── __init__.py
+        ├── test_cell.py
+        ├── test_generator.py
+        ├── test_renderer.py
+        └── test_solver.py
