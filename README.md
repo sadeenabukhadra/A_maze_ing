@@ -1,4 +1,4 @@
-This activity has been created as part of the 42 curriculum by sabu-kha, aalshobaki.
+*This activity has been created as part of the 42 curriculum by sabu-kha, aalshoub.*
 
 # A-Maze-ing
 
