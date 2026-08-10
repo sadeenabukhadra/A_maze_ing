@@ -186,18 +186,17 @@ def export_maze(
 
     Args:
         generator: Generated maze.
-        solution: Shortest path (currently unused — see note below).
+        solution: Shortest path from entry to exit, as a list of
+            (x, y) coordinates.
         output_file: Output filename.
-
-    Note:
-        MazeExporter currently writes only the hexadecimal grid.
-        The subject's output format also expects an entry/exit
-        coordinates line and a direction-letters solution line
-        (N/E/S/W). That part of exporter.py still needs to be
-        extended before this satisfies subject 4.5 fully.
     """
     exporter = MazeExporter(generator.grid)
-    exporter.export(output_file)
+    exporter.export(
+        output_file,
+        entry=generator.entry,
+        exit_maze=generator.exit_maze,
+        solution=solution,
+    )
 
 
 def check_terminal(width: int, height: int) -> bool:
