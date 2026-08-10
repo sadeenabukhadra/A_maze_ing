@@ -1,10 +1,11 @@
 from typing import TypeAlias
 
+
 ConfigValue: TypeAlias = int | str | bool | tuple[int, int]
 
 
 class Parser:
-    def _init_(self, filename: str) -> None:
+    def __init__(self, filename: str) -> None:
         self.filename = filename
 
     def parse(self) -> dict[str, ConfigValue]:
@@ -22,7 +23,9 @@ class Parser:
                         continue
 
                     if "=" not in line:
-                        raise ValueError(f"Invalid configuration line: {line}")
+                        raise ValueError(
+                            f"Invalid configuration line: {line}"
+                        )
 
                     key, value = line.split("=", 1)
                     key = key.strip()
@@ -32,7 +35,9 @@ class Parser:
                         try:
                             config[key] = int(value)
                         except ValueError:
-                            raise ValueError(f"{key} must be an integer, got: {value}")
+                            raise ValueError(
+                                f"{key} must be an integer, got: {value}"
+                            )
 
                     elif key == "ENTRY" or key == "EXIT":
                         try:
@@ -52,21 +57,52 @@ class Parser:
                         elif value == "False":
                             config[key] = False
                         else:
-                            raise ValueError("PERFECT must be True or False")
+                            raise ValueError(
+                                "PERFECT must be True or False"
+                            )
 
                     elif key == "OUTPUT_FILE":
                         if not value:
-                            raise ValueError("OUTPUT_FILE cannot be empty")
+                            raise ValueError(
+                                "OUTPUT_FILE cannot be empty"
+                            )
 
                         config[key] = value
-
+                    elif key == "SEED":
+                        try:
+                            config[key] = int(value)
+                        except ValueError:
+                            raise ValueError(
+                                f"SEED must be an integer, got: {value}"
+                            )
                     else:
-                        raise ValueError(f"Unknown configuration key: {key}")
+                        raise ValueError(
+                            f"Unknown configuration key: {key}"
+                        )
 
         except FileNotFoundError:
-            raise FileNotFoundError(f"Configuration file not found: {self.filename}")
+            raise FileNotFoundError(
+                f"Configuration file not found: {self.filename}"
+            )
 
         if not config:
             raise ValueError("Configuration file is empty")
+
+        required_keys = {
+            "WIDTH",
+            "HEIGHT",
+            "ENTRY",
+            "EXIT",
+            "OUTPUT_FILE",
+            "PERFECT"
+        }
+
+        missing_keys = required_keys - config.keys()
+
+        if missing_keys:
+            missing = ", ".join(sorted(missing_keys))
+            raise ValueError(
+                f"Missing required configuration key(s): {missing}"
+            )
 
         return config

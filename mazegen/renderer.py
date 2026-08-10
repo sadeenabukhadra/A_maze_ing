@@ -10,6 +10,11 @@ from enum import Enum
 import os
 
 
+def rgb_fg(r: int, g: int, b: int) -> str:
+    """Build an ANSI true-color foreground escape sequence."""
+    return f"\033[38;2;{r};{g};{b}m"
+
+
 class Color(Enum):
     """Enumeration of ANSI color codes used for terminal output."""
     GREEN = "\033[32m"
@@ -41,19 +46,35 @@ class RendererMaze:
         self.solution = solution
         self.show_solution = show_solution
 
-        self.colors = [
-            Color.WHITE,
-            Color.BLUE,
-            Color.YELLOW,
-            Color.CYAN,
+        self.themes: list[dict[str, str]] = [
+            {
+                "name": "Ocean",
+                "wall": rgb_fg(66, 165, 245),
+                "pattern": rgb_fg(255, 255, 255),
+            },
+            {
+                "name": "Sunset",
+                "wall": rgb_fg(255, 138, 101),
+                "pattern": rgb_fg(255, 213, 79),
+            },
+            {
+                "name": "Forest",
+                "wall": rgb_fg(129, 199, 132),
+                "pattern": rgb_fg(200, 230, 201),
+            },
+            {
+                "name": "Neon",
+                "wall": rgb_fg(186, 104, 200),
+                "pattern": rgb_fg(225, 190, 231),
+            },
         ]
 
-        self.curr_color_index: int = 1
-        self.curr_color: Color = self.colors[self.curr_color_index]
-        self.entry_color = Color.GREEN
-        self.exit_color = Color.RED
-        self.path_color = Color.WHITE
-        self.pattern_color = Color.WHITE
+        self.curr_theme_index: int = 0
+        self.curr_theme: dict[str, str] = self.themes[self.curr_theme_index]
+
+        self.entry_fg = rgb_fg(76, 217, 100)
+        self.exit_fg = rgb_fg(255, 69, 58)
+        self.path_fg = rgb_fg(255, 255, 255)
         self.H_WALL = "━━━"
         self.H_EMPTY = "   "
         self.V_WALL = "┃"
@@ -101,6 +122,7 @@ class RendererMaze:
             (False, False, False, True): "═",
             (False, False, False, False): " ",
         }
+        self.RESERVED_FILL_CHAR = "█"
         self.RESERVED_BLOCK = "███"
 
     def clear_screen(self) -> None:
@@ -193,6 +215,16 @@ class RendererMaze:
             return False
 
         return grid[r - 1][c].south or grid[r][c].north
+
+    def both_reserved_h(self, r: int, c: int) -> bool:
+        """True if the two cells sharing the horizontal segment at (r, c)
+        are both reserved '42' cells."""
+        return self.is_reseved(c, r - 1) and self.is_reseved(c, r)
+
+    def both_reserved_v(self, r: int, c: int) -> bool:
+        """True if the two cells sharing the vertical segment at (r, c)
+        are both reserved '42' cells."""
+        return self.is_reseved(c - 1, r) and self.is_reseved(c, r)
 
     def v_boundray(self, r: int, c: int) -> bool:
         """
@@ -311,10 +343,34 @@ class RendererMaze:
 
         directions = self.get_directions(r, c)
         if not any(directions):
+            if self.junction_interior(r, c):
+                return self.RESERVED_FILL_CHAR
             return " "
         if self.junction_rese(r, c):
             return self.RESERVED_JUNCTIONS.get(directions, "╬")
         return self.JUNCTIONS.get(directions, "╋")
+
+    def junction_interior(self, r: int, c: int) -> bool:
+        corners = [
+            (c - 1, r - 1),
+            (c, r - 1),
+            (c - 1, r),
+            (c, r),
+        ]
+
+        w = self.generator.width
+        h = self.generator.height
+
+        existing = [
+            (x, y)
+            for x, y in corners
+            if 0 <= x < w and 0 <= y < h
+        ]
+
+        if not existing:
+            return False
+
+        return all(self.is_reseved(x, y) for x, y in existing)
 
     def get_content(self, x: int, y: int) -> str:
         """
@@ -335,20 +391,20 @@ class RendererMaze:
         reset = Color.RESET.value
 
         if pos == self.generator.entry:
-            return f"{self.entry_color.value} ● {reset}"
+            return f"{self.entry_fg} ● {reset}"
 
         if pos == self.generator.exit_maze:
-            return f"{self.exit_color.value} ■ {reset}"
+            return f"{self.exit_fg} ■ {reset}"
 
         if (
             self.show_solution and
             self.solution
             and pos in self.solution
         ):
-            return f"{self.path_color.value} • {reset}"
+            return f"{self.path_fg} • {reset}"
 
         if self.is_reseved(x, y):
-            return f"{self.pattern_color.value}{self.RESERVED_BLOCK}{reset}"
+            return f"{self.curr_theme['pattern']}{self.RESERVED_BLOCK}{reset}"
         return self.H_EMPTY
 
     def h_segment(
@@ -379,6 +435,32 @@ class RendererMaze:
             return pattern_color
         return wall_color
 
+    def build_header(self) -> str:
+        """Build a decorative header line showing the maze title and theme."""
+        w = self.generator.width
+        total_width = w * 4 + 1
+
+        theme_name = self.curr_theme["name"]
+        title = f" A-Maze-ing · {w}x{self.generator.height} · {theme_name} "
+
+        wall_color = self.curr_theme["wall"]
+        reset = Color.RESET.value
+
+        inner_width = max(total_width - 2, len(title))
+        line = title.center(inner_width, "─")
+
+        return f"{wall_color}╭{line}╮{reset}"
+
+    def build_footer(self) -> str:
+        """Build a decorative footer line matching the header width."""
+        w = self.generator.width
+        total_width = w * 4 + 1
+
+        wall_color = self.curr_theme["wall"]
+        reset = Color.RESET.value
+
+        return f"{wall_color}╰{'─' * (total_width - 2)}╯{reset}"
+
     def render(self) -> None:
         """Render the maze with dynamic walls,
         junctions, and reserved 42 blocks."""
@@ -387,9 +469,10 @@ class RendererMaze:
         w = self.generator.width
         h = self.generator.height
 
-        wall_color = self.curr_color.value
-        pattern_color = self.pattern_color.value
+        wall_color = self.curr_theme["wall"]
+        pattern_color = self.curr_theme["pattern"]
         reset = Color.RESET.value
+        print(self.build_header())
 
         for r in range(h + 1):
 
@@ -406,6 +489,9 @@ class RendererMaze:
                         if has_wall
                         else self.H_EMPTY
                     )
+                    segment_color = pattern_color
+                elif self.both_reserved_h(r, c):
+                    h_wall = self.RESERVED_BLOCK
                     segment_color = pattern_color
                 else:
                     h_wall = (
@@ -440,6 +526,9 @@ class RendererMaze:
                             else " "
                         )
                         segment_color = pattern_color
+                    elif self.both_reserved_v(r, c):
+                        v_char = self.RESERVED_BLOCK[0]
+                        segment_color = pattern_color
                     else:
                         v_char = (
                             self.V_WALL
@@ -464,6 +553,7 @@ class RendererMaze:
                 v_line += v_end
                 v_line += reset
                 print(v_line)
+        print(self.build_footer())
 
     def print_menu(self) -> None:
         """Print the interactive option menu below the rendered maze."""
@@ -480,12 +570,12 @@ class RendererMaze:
         print("4: Quit")
         print("Choose an option: ", end="", flush=True)
 
-    def change_color(self) -> None:
-        """Cycle to the next wall color in self.colors."""
-        self.curr_color_index = (
-            (self.curr_color_index + 1) % len(self.colors)
+    def change_theme(self) -> None:
+        """Cycle to the next color theme in self.themes."""
+        self.curr_theme_index = (
+            (self.curr_theme_index + 1) % len(self.themes)
         )
-        self.curr_color = self.colors[self.curr_color_index]
+        self.curr_theme = self.themes[self.curr_theme_index]
 
     def toggle_solution(self) -> None:
         """Toggle whether the solution path is displayed."""

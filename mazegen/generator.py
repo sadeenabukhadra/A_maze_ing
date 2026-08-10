@@ -222,6 +222,65 @@ class Generator:
         return False
 
 
+def is_dead_end(cell: Cell) -> bool:
+    """Return True when a cell has exactly one open passage."""
+    open_count = 0
+
+    for direction in ("north", "south", "east", "west"):
+        if not cell.status_wall(direction):
+            open_count += 1
+
+    return open_count == 1
+
+
+def braid(generator: Generator) -> None:
+    """Remove real dead-ends until at most two remain."""
+    max_attempts = generator.width * generator.height * 4
+
+    for _ in range(max_attempts):
+        dead_ends: list[Cell] = []
+
+        for row in generator.grid:
+            for cell in row:
+                if (cell.x, cell.y) in generator.reserved_cells:
+                    continue
+
+                if is_dead_end(cell):
+                    dead_ends.append(cell)
+
+        if len(dead_ends) <= 2:
+            return
+
+        random.shuffle(dead_ends)
+
+        changed = False
+
+        for cell in dead_ends:
+            candidates = generator.closed_neighbors(cell)
+
+            if not candidates:
+                continue
+
+            random.shuffle(candidates)
+
+            for neighbor in candidates:
+                if (neighbor.x, neighbor.y) in generator.reserved_cells:
+                    continue
+
+                if generator.can_open_wall(cell, neighbor):
+                    continue
+
+                generator.remove_wall_between(cell, neighbor)
+                changed = True
+                break
+
+            if changed:
+                break
+
+        if not changed:
+            return
+
+
 def add_loop(generator: Generator) -> None:
     """Add random loops to the generated maze."""
     attempts = (generator.width * generator.height) // 10
@@ -270,12 +329,17 @@ def none_perfect(generator: Generator) -> list[list[Cell]]:
         random.seed(generator.seed)
 
     generator.create_grid()
-    if (generator.height >= 7 or generator.width >= 10):
+
+    if generator.height >= 7 or generator.width >= 10:
         generator.reserve_42_cells()
     else:
         print("The maze is very small")
+
     generator.choose_entry()
     generator.choose_exit()
     generator.run_backtracking()
+
     add_loop(generator)
+    braid(generator)
+
     return generator.grid
