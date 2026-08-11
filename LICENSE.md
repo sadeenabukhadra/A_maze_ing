@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2026 Sadeen Abu Khadra and Ahmad Al-Shobaki
+Copyright (c) 2026 Sadeen Abu Khadra and Ahmed Al-Shoubaki
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
