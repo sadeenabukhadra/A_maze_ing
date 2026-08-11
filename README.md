@@ -294,7 +294,7 @@ A_maze_ing/
 │   ├── test_generator.py
 │   ├── test_renderer.py
 │   └── test_solver.py
-└── flowchart/                 # design diagrams
+└── flowchart/                 # design diagrams (the plan)
 ```
 
 ## The `mazegen` reusable package
@@ -355,7 +355,7 @@ pytest test/
 | File | Covers |
 |---|---|
 | `test_generator.py` | Grid creation, "42" reservation, entry/exit validation |
-| `test_solver.py` | BFS finds a solution, starts at entry, ends at exit |
+| `test_solver.py` | BFS fin  maze generation, mazegen package, solver> |ds a solution, starts at entry, ends at exit |
 | `test_renderer.py` | Initial renderer state, cell content rendering |
 | `test_cell.py` | Wall open/close behavior |
 
@@ -376,8 +376,8 @@ pytest test/
 
 | Login | Contributions |
 |---|---|
-| `sabu-kha` | <fill in actual contributions, e.g. maze generation, mazegen package, solver> |
-| `aalshobaki` | <fill in actual contributions, e.g. rendering, config parsing, testing> |
+| `sabu-kha` |  maze_solver,maze_exporter,config parsing,licences, |
+| `aalshoub` |  rendering, mazegenerator,makefile,main file,cell |
 
 ## Resources
 
