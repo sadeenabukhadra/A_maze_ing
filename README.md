@@ -289,11 +289,6 @@ A_maze_ing/
 │   ├── solver.py            # MazeSolver — BFS shortest path
 │   ├── exporter.py          # MazeExporter — grid to hexadecimal file
 │   └── renderer.py           # RendererMaze — terminal display + menu
-├── test/                     # pytest suite
-│   ├── test_cell.py
-│   ├── test_generator.py
-│   ├── test_renderer.py
-│   └── test_solver.py
 └── flowchart/                 # design diagrams (the plan)
 ```
 
