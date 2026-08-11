@@ -28,7 +28,7 @@ class Parser:
                         )
 
                     key, value = line.split("=", 1)
-                    key = key.strip()
+                    key = key.strip().upper()
                     value = value.strip()
 
                     if key == "WIDTH" or key == "HEIGHT":

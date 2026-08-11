@@ -57,42 +57,33 @@ class Generator:
                     self.reserved_cells.add((real_x, real_y))
 
     def choose_entry(self) -> None:
-        """Validate and open the maze entry."""
+        """Validate that the entry coordinates are inside the maze."""
         x, y = self.entry
 
         if not (
-            0 <= x < self.width and 0 <= y < self.height
+            0 <= x < self.width
+            and 0 <= y < self.height
         ):
             raise ValueError(
                 "Invalid entry coordinates: out of maze bounds."
             )
 
-        if not (
-            x == 0 or x == self.width - 1
-                or y == 0 or y == self.height - 1
-        ):
-            raise ValueError(
-                "Entry coordinates must be on the edges of the maze."
-            )
-
     def choose_exit(self) -> None:
-        """Validate and open the maze exit."""
+        """Validate that the exit coordinates are inside the maze."""
         x, y = self.exit_maze
 
         if not (
-            0 <= x < self.width and 0 <= y < self.height
+            0 <= x < self.width
+            and 0 <= y < self.height
         ):
             raise ValueError(
                 "Invalid exit coordinates: out of maze bounds."
             )
 
-        if not (
-            x == 0 or x == self.width - 1
-                or y == 0 or y == self.height - 1
-        ):
+        if self.entry == self.exit_maze:
             raise ValueError(
-                "Exit coordinates must be on the edges of the maze."
-                )
+                "Entry and exit must be different."
+            )
 
     def get_valid_neighbors(self, cell: Cell) -> list[Cell]:
         """Return all unvisited neighboring cells that can be visited."""
