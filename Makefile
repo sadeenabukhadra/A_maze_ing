@@ -2,11 +2,11 @@ PYTHON = python3
 
 .PHONY: install run debug clean lint lint-strict
 
-install:
-	pip install -r requirements.txt
-
 run:
 	$(PYTHON) a_maze_ing.py config.txt
+
+install:
+	pip install -r requirements.txt
 
 debug:
 	$(PYTHON) -m pdb a_maze_ing.py config.txt
