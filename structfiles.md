@@ -1,6 +1,7 @@
 A_maze_ing/
 |
 |--- a_maze_ing.py
+|--- pasresing.py
 |--- README.md
 |--- config.txt
 |--- Makefile
